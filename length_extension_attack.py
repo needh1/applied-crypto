@@ -18,7 +18,7 @@ def create_gui():
         result = simulate_length_extension_attack(original_hash, extra_data)
         result_label.config(text="Simulated Extended Hash: " + result)
 
-    tk.Label(root, text="Enter Original Hash:").pack()
+    tk.Label(root, text="Enter Hash:").pack()
     hash_entry = tk.Entry(root)
     hash_entry.pack()
 
@@ -26,7 +26,7 @@ def create_gui():
     data_entry = tk.Entry(root)
     data_entry.pack()
 
-    submit_button = tk.Button(root, text="Submit", command=on_submit)
+    submit_button = tk.Button(root, text="Perform Length Extension Attack", command=on_submit)
     submit_button.pack()
 
     result_label = tk.Label(root, text="")
