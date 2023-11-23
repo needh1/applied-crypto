@@ -1,26 +1,33 @@
 import tkinter as tk
-from RSA import rsa_generate
+import RSA 
 from Weiner import weiner_attack
 
 def perform_attack():
     # Get the key size from the user
-    keysize = int(entry_keysize.get())
+    try:
+        keysize = int(entry_keysize.get())
+        if keysize <=0:
+            raise ValueError("key must be positive")
+        
+        # Generate 'e', 'n', and 'd' using rsa_generate function
+        e, n, generated_d = RSA.rsa_generate(keysize)
 
-    # Generate 'e', 'n', and 'd' using rsa_generate function
-    e, n, generated_d = rsa_generate(keysize)
+        # Update GUI with generated 'e' and 'n' for user reference
+        label_generated_values.config(text=f"Generated 'e': {e}, 'n': {n}")
 
-    # Update GUI with generated 'e' and 'n' for user reference
-    label_generated_values.config(text=f"Generated 'e': {e}, 'n': {n}")
+        # Execute the Weiner attack with generated 'e' and 'n' to obtain 'd'
+        d = weiner_attack(e, n)
 
-    # Execute the Weiner attack with generated 'e' and 'n' to obtain 'd'
-    d = weiner_attack(e, n)
-
-    # Check if the obtained 'd' matches the generated 'd' and update GUI accordingly
-    if d is not None and d == generated_d:
-        result_label.config(text=f"Attack successful! Private key 'd': {d}")
-    else:
-        result_label.config(text="Attack unsuccessful or incorrect 'd'")
-
+        # Check if the obtained 'd' matches the generated 'd' and update GUI accordingly
+        if d is not None and d == generated_d:
+            result_label.config(text=f"Attack successful! Private key 'd': {d}")
+        else:
+            result_label.config(text="Attack unsuccessful or incorrect 'd'")
+    except ValueError as ve:
+        result_label.config(text = f"Error: {ve}")
+    except Exception as e:
+        result_label.config(text = f"Unexpected Error: {e}")
+        
 # Create the main window
 root = tk.Tk()
 root.title("Wiener Attack GUI")
