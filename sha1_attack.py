@@ -84,7 +84,7 @@ def visualize_circular_buffer():
                 bar[i].set_height(1)  # Set the height of bars to 1 for added data
                 bar[i].set_color('blue')
             else:
-                bar[i].set_height(0)  # Set the height of bars to 0 for original message
+                bar[i].set_height(1)  # Set the height of bars to 0 for original message
                 bar[i].set_color('red')
         return bar
 
