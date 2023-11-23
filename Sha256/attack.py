@@ -1,7 +1,7 @@
 import tkinter as tk
 import struct
 import binascii
-from sha_256 import Sha256Hash  # Assuming your custom SHA-256 implementation is in a file named "sha256.py"
+from Sha256.sha_256 import Sha256Hash  # Assuming your custom SHA-256 implementation is in a file named "sha256.py"
 
 def sha256_padding(length):
     # Padding function for SHA-256
