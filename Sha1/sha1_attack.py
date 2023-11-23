@@ -9,13 +9,10 @@ from matplotlib.animation import FuncAnimation
 def calculate_mac_length_extension():
     entry_text = entry.get()
     message = entry_text.encode('utf-8')
-
     password = os.urandom(16)
-
     addition_text = additional_entry.get()
     addition = addition_text.encode('utf-8')
 
-    # Compute the original hash for H(Password || Message)
     m = hashlib.sha1()
     m.update(password + message)
     og_hash = m.hexdigest()
@@ -27,15 +24,19 @@ def calculate_mac_length_extension():
 
     new_hash_values = [og_hash]  # List to store hash values over time
 
-    # Calculate new hash and message
     new_hash, new_message = hashpumpy.hashpump(og_hash, message, addition, len(password))
 
-    '''print("New hash: ", new_hash)
-    print("New message: ", new_message)'''
+    # Generate hash values at different stages and store in new_hash_values list
+    combined_data = message + addition
+    for i in range(len(addition)):
+        hash_result = hashlib.sha1(password + combined_data[:len(message) + i]).hexdigest()
+        new_hash_values.append(hash_result)
 
     m = hashlib.sha1()
     m.update(password + new_message)
     extended_mac = m.hexdigest()
+
+    new_hash_values.append(extended_mac)
 
     new_hash_output.config(state='normal')
     new_hash_output.delete('1.0', tk.END)
@@ -51,12 +52,6 @@ def calculate_mac_length_extension():
         status_label.config(text="ATTACK SUCCESSFUL! MACs Match (Insecure)")
     else:
         status_label.config(text="Attack Failed! MACs Don't Match (Secure)")
-
-     # Generate hash values at different stages and store in new_hash_values list
-    combined_data = message + addition
-    for i in range(len(addition)):
-        hash_result = hashlib.sha1(password + combined_data[:len(message) + i]).hexdigest()
-        new_hash_values.append(hash_result)
 
     # Plot time series of hash values
     plt.figure(figsize=(8, 6))
