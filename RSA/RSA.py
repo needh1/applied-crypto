@@ -1,6 +1,7 @@
-import sympy
+from sympy import randprime
 import math
 from decimal import *
+from Crypto.Util.number import getPrime
 
 
 
@@ -44,7 +45,7 @@ def modInverse(a, m) :
 def randomPrime(bits):
 	min = math.sqrt(2)*(2**(bits - 1))
 	max = 2**(bits)- 1
-	p = sympy.randprime(min, max)
+	p = randprime(min, max)
 	return p
 
 def rsa_generate(keysize):
@@ -53,7 +54,6 @@ def rsa_generate(keysize):
 		p = randomPrime(keysize/2);
 		q = randomPrime(keysize/2);
 		phi= (p-1)*(q-1)
-		#lambda_= (p-1)*(q-1)/gcd(p-1, q-1)
 		if p<q:
 			if q>2*p:
 				continue
@@ -74,10 +74,11 @@ def rsa_generate(keysize):
 		if (gcd(e, phi) == 1 and abs(p-q) >= 2**(keysize/2 - 100) ):
 			break
 		
-	#print("RSA_1, p {}, q {}".format(p,q))
 	phi = (p-1)*(q-1)
 	lambda_= (p-1)*(q-1)/gcd(p-1, q-1)
-	#print("e*p%phi",(e*d)%phi)
+	print(p)
+	print(q)
+	print(phi)
 	return n, e, d
 
 
@@ -86,17 +87,3 @@ def rsa_encrypt(m, n ,e):
 	
 def rsa_decrypt(c, d ,n):
 	return (c**d)%(n)
-
-
-'''bitlength = int(input("Enter the bitlength "))
-n, e, d, phi, lambda_ = rsa_generate(bitlength)
-print("The public key is:n, e ",n,", ",e)
-print("The private key is:n, d ",n,", ",d)
-print("ed mod phi", e*d % phi)
-
-
-m = int(input("Enter the message "))
-c = rsa_encrypt(m, n ,e)
-print("The encrypted message is ",c)
-m = rsa_decrypt(c, d ,n)
-print("The decrypted message is ",m)'''
